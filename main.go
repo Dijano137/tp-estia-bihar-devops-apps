@@ -13,7 +13,7 @@ func main() {
 	app := newApp()
 
 	server := http.Server{
-		Addr:    ":8080",
+		Addr:    ":8081",
 		Handler: app,
 	}
 

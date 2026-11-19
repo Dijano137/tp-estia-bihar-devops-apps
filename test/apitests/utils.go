@@ -25,10 +25,10 @@ func call(method, path string, reqBody any, code *int, result any) error {
 		return err
 	}
 
-	req, _ := http.NewRequest(method, baseUrl + path,  bytes.NewBuffer(jsonBody))
+	req, _ := http.NewRequest(method, baseUrl+path, bytes.NewBuffer(jsonBody))
 
-    // send the request
-    res, err := client.Do(req)
+	// send the request
+	res, err := client.Do(req)
 	if err != nil {
 		return err
 	}

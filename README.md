@@ -10,9 +10,9 @@ go run .
 ```
 
 Then you can browse:
-- the home page: http://localhost:8080
-- the Swagger UI : http://localhost:8080/swagger/
-- the logs : http://localhost:8080/logs
+- the home page: http://localhost:8081
+- the Swagger UI : http://localhost:8081/swagger/
+- the logs : http://localhost:8081/logs
 
 # Dev
 
