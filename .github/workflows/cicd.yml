@@ -24,13 +24,26 @@ jobs:
           echo "## 🔖 New version '$version'" >> $GITHUB_STEP_SUMMARY
           echo "## 📦 Image '$imageName'" >> $GITHUB_STEP_SUMMARY
 
+    unit-tests:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5 
+        with: 
+          go-version-file: go.mod
+
+      - name: Unit tests
+      
+        run: go test -v .
+
   build-and-push:
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
 
-    needs: [versioning]
+    needs: [versioning, unit-tests]
 
     steps:
       - uses: actions/checkout@v4
