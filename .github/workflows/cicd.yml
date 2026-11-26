@@ -62,18 +62,21 @@ jobs:
     needs: [build-and-push, versioning]
 
     # Our API server, running in the background
-    # services:
-    #   backend:
-    #     image: ${{needs.versioning.outputs.imageName}}
-    #     credentials:
-    #       username: ${{github.actor}}
-    #       password: ${{secrets.GITHUB_TOKEN}}
-    #     ports:
-    #     - 8080:8080
+    services:
+      backend:
+        image: ${{needs.versioning.outputs.imageName}}
+        credentials:
+          username: ${{github.actor}}
+          password: ${{secrets.GITHUB_TOKEN}}
+        ports:
+        - 8080:8081
 
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
       - name: API tests
         run: |
-          echo "## 🌐 API tests using ${{needs.v.outputs.imageName}}" >> $GITHUB_STEP_SUMMARY
-
+          echo "## 🌐 API tests using ${{needs.versioning.outputs.imageName}}" >> $GITHUB_STEP_SUMMARY
+          go test -count=1 -v ./test/apitests
