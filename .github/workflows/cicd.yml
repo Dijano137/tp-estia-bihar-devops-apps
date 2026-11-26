@@ -80,3 +80,27 @@ jobs:
         run: |
           echo "## 🌐 API tests using ${{needs.versioning.outputs.imageName}}" >> $GITHUB_STEP_SUMMARY
           go test -count=1 -v ./test/apitests
+
+  deploy-dev:
+    runs-on: ubuntu-latest
+    needs: [versioning, api-tests]          # seulement si TOUS les tests sont OK
+    if: github.ref == 'refs/heads/master'   # seulement pour les push sur master
+    permissions:
+      contents: write                       # droit d'ÉCRIRE dans le dépôt (pour pousser)
+
+    steps:
+      # 1. Récupérer la branche de déploiement (et non le code)
+      - uses: actions/checkout@v4
+        with:
+          ref: deploy-dev
+
+      # 2. Écrire la nouvelle version, commiter et pousser
+      - name: Update version.txt on deploy-dev
+        run: |
+          echo "${{ needs.versioning.outputs.version }}" > version.txt
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add version.txt
+          git commit -m "Deploy ${{ needs.versioning.outputs.version }} to dev"
+          git push
+          echo "## 🚀 Deployed '${{ needs.versioning.outputs.version }}' to dev" >> $GITHUB_STEP_SUMMARY
